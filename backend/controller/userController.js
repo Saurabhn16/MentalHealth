@@ -3,20 +3,39 @@ const sendToken = require('../utils/jwtToken');
 const crypto = require("crypto");
 
 // register a user
-exports.registerUser = async(req,res,next)=>{
-        const {name,email,password} = req.body;
-        const user = await User.create({
-            name,email,password,
-            avatar:{
-                public_id:"this is a sample id",
-                url:"profilepicUrl"
-            }
-        });
+// exports.registerUser = async(req,res,next)=>{
+//         const {name,email,password} = req.body;
+//         const user = await User.create({
+//             name,email,password,
+//             avatar:{
+//                 public_id:"this is a sample id",
+//                 url:"profilepicUrl"
+//             }
+//         });
         
-        sendToken(user,201,res);
-        console.log('user registered successfully')
-}
+//         sendToken(user,201,res);
+//         console.log('user registered successfully')
+// }
 
+exports.registerUser = async (req, res, next) => {
+    const { name, email, password } = req.body;
+    const user = await User.create({
+      name,
+      email,
+      password,
+      avatar: {
+        public_id: "this is a sample id",
+        url: "profilepicUrl",
+      },
+    });
+  
+    // Determine if the request is coming from localhost or the deployed domain
+    const isLocalhost = req.headers.origin.includes("localhost");
+  
+    sendToken(user, 201, res, isLocalhost);
+    console.log('user registered successfully');
+  };
+  
 
 // login a user
 exports.loginUser = async (req,res,next)=>{
@@ -41,7 +60,9 @@ exports.loginUser = async (req,res,next)=>{
         return next(new ErrorHander("Invalid email or password"));
     }
 
-    sendToken(user,200,res);
+    const isLocalhost = req.headers.origin.includes("localhost");
+    
+    sendToken(user, 201, res, isLocalhost);
 
     console.log('successfully login')
 }

@@ -1,6 +1,6 @@
 const connectDatabase = require('./config/database')
 const app = require('./app')
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 
 connectDatabase();
@@ -9,5 +9,6 @@ connectDatabase();
 
 const server = app.listen(port, () => {
     console.log(`Server listening on port no ${port}`);
+    // console.log('node.js version: ', process.versions.node)
 });
 
